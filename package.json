@@ -1,0 +1,27 @@
+{
+  "name": "happy-21st",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An interactive 21st birthday experience — animated digital card, mini-game and scrapbook.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@gsap/react": "^2.1.1",
+    "gsap": "^3.12.5",
+    "next": "^14.2.15",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.39",
+    "tailwindcss": "^3.4.10",
+    "typescript": "^5.5.4"
+  }
+}

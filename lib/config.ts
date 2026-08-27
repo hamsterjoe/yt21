@@ -13,9 +13,9 @@ export const CONFIG = {
   letterSignoff: "From Kor Kor, 2026",
   letter: [
     "Happy 21st birthday, YT.",
-    "Thank you for being the best sister a brother could ask for. We have been through so much together and I am grateful for every moment we have shared.",
-    "I hope you have a great birthday and I hope you have a great year ahead. May all your wishes and dreams come true.",
-    "Thank you for every laugh, every late-night talk, and every ordinary moment that turned into a memory just because you were in it.",
-    "Here's to your next chapter — may it be soft, bright, and full of cake.",
+    "Thank you for being the best sister a brother could ever ask for. We have been through so much together and I am grateful for every moment we have shared.",
+    "I hope you have a great birthday and I hope you have a great year ahead. May all your wishes and dreams come true in life .",
+    "Congratulations on your results and your internship. Mommy, Daddy and I are so proud of you.",
+    "Here's to your next chapter. May it be joyful, full of wonders and filled with cake.",
   ],
 };

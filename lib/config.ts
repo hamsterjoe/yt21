@@ -16,6 +16,6 @@ export const CONFIG = {
     "Thank you for being the best sister a brother could ever ask for. We have been through so much together and I am grateful for every moment we have shared.",
     "I hope you have a great birthday and I hope you have a great year ahead. May all your wishes and dreams come true in life .",
     "Congratulations on your results and your internship. Mommy, Daddy and I are so proud of you.",
-    "Here's to your next chapter. May it be joyful, full of wonders and filled with cake.",
+    "Here's to your future chapter. May it be joyful, full of wonders and filled with cake.",
   ],
 };

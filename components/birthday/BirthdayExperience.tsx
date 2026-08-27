@@ -89,7 +89,7 @@ export default function BirthdayExperience() {
       /* ignore */
     }
     setPhase("main");
-    setToast("🔓 surprise unlocked — welcome to your scrapbook");
+    setToast("🔓 Surprise unlocked");
   }, []);
 
   return (

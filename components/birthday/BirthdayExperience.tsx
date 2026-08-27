@@ -7,7 +7,7 @@ import CandleGame from "./CandleGame";
 import MemoriesScene from "./MemoriesScene";
 import LetterScene from "./LetterScene";
 import FinalScene from "./FinalScene";
-import ScrapbookNav from "./ScrapbookNav";
+// import ScrapbookNav from "./ScrapbookNav";
 import Cursor from "./Cursor";
 import SoundToggle from "./SoundToggle";
 import { initAudio } from "@/lib/sound";
@@ -112,7 +112,7 @@ export default function BirthdayExperience() {
             <LetterScene />
             <FinalScene />
           </main>
-          <ScrapbookNav onReplay={() => setReplay(true)} />
+          {/* <ScrapbookNav onReplay={() => setReplay(true)} /> */}
         </>
       )}
 

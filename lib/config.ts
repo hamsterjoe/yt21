@@ -9,7 +9,7 @@
  */
 export const CONFIG = {
   herName: "YT",
-  finaleLine: "I hope all yours wishes and aspirations come true quickly.",
+  finaleLine: "I hope all your wishes and aspirations come true as you want them to be.",
   letterSignoff: "From Kor Kor, 2026",
   letter: [
     "Happy 21st birthday, YT.",

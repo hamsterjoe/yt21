@@ -14,11 +14,13 @@ gsap.registerPlugin(useGSAP);
  * Tap-to-open photo viewer. The polaroid straightens out and scales up
  * over a dimmed, blurred backdrop. Close with the ✕, the backdrop, or
  * Escape; focus moves into the dialog and back out again.
+ * Caption and note are both optional.
  */
 export default function PhotoViewer({ memory, onClose }: { memory: Memory; onClose: () => void }) {
   const root = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const reduced = useReducedMotion();
+  const label = memory.caption ?? "a favourite memory";
 
   useGSAP(
     () => {
@@ -51,20 +53,20 @@ export default function PhotoViewer({ memory, onClose }: { memory: Memory; onClo
   return (
     <div ref={root} className="viewer">
       <div className="viewer-backdrop" onClick={onClose} aria-hidden="true" />
-      <figure className="viewer-figure" role="dialog" aria-modal="true" aria-label={`Photo: ${memory.caption}`}>
+      <figure className="viewer-figure" role="dialog" aria-modal="true" aria-label={`Photo: ${label}`}>
         <button ref={closeRef} type="button" className="viewer-close" onClick={onClose} aria-label="Close photo">
           ✕
         </button>
         <div className="polaroid">
           <span className="ph">
             {memory.src ? (
-              <Image src={memory.src} alt={memory.caption} width={900} height={675} />
+              <Image src={memory.src} alt={label} width={900} height={675} />
             ) : (
               <Art kind={memory.art} />
             )}
           </span>
-          <figcaption className="cap">{memory.caption}</figcaption>
-          <p className="viewer-note">{memory.note ?? ""}</p>
+          {memory.caption && <figcaption className="cap">{memory.caption}</figcaption>}
+          <p className="viewer-note">{memory.note ?? "one of my favourites ♡"}</p>
         </div>
       </figure>
     </div>

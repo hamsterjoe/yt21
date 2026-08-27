@@ -1,11 +1,14 @@
 /**
- * ✏️  YOUR PHOTOS + CAPTIONS
+ * ✏️  YOUR PHOTOS
  * ------------------------------------------------------------------
- * One flat gallery of 10 pictures — no categories, no sub-sections.
+ * One flat gallery of 10 pictures — no categories, no captions needed.
  *
  * Drop image files into  public/photos/  (WebP preferred, ~1200px wide),
- * then set  src: "/photos/photo01.webp"  on the matching entry and write
- * your own caption (+ optional note shown in the enlarged viewer).
+ * then set  src: "/photos/photo01.webp"  on the matching entry.
+ *
+ * Everything below is optional — add per entry only if you want it:
+ *   caption: "that beach day"   — handwritten line under the photo
+ *   note: "..."                 — extra line in the enlarged viewer
  *
  * While  src  is null, a hand-drawn pastel placeholder illustration
  * (the `art` field) is shown instead, so the site is fully working
@@ -31,6 +34,8 @@ export type ArtKind =
 
 export interface Memory {
   id: string;
+  /** Optional — add one any time: caption: "that beach day" */
+  caption?: string;
   note?: string;
   src: string | null;
   art: ArtKind;

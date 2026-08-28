@@ -1,24 +1,23 @@
 "use client";
 
-/**
- * Sound design — tiny WebAudio-synthesised effects, no audio files needed.
- *
- * - Nothing plays until the user explicitly enables sound via the toggle.
- * - The AudioContext is created/resumed inside the gift-tap gesture
- *   (`initAudio`), which satisfies browser autoplay policies.
- * - If you later prefer real audio files, drop them in public/sounds/
- *   and re-implement `sfx` with <audio> elements — the call sites stay.
- */
-
 let ctx: AudioContext | null = null;
-let enabled = false;
+let enabled = true;
 
-/** Create/resume the AudioContext. Call from a user gesture. */
+let music: HTMLAudioElement | null = null;
+let musicAvailable = true;
+let fadeTimer: number | null = null;
+let visibilityWired = false;
+
+const MUSIC_URL = "/birthday-song.mp3";
+const MUSIC_VOLUME = 0.42;
+
 export function initAudio() {
   if (typeof window === "undefined") return;
   if (!ctx) {
     try {
-      const AC = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      const AC =
+        window.AudioContext ??
+        (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
       if (AC) ctx = new AC();
     } catch {
       ctx = null;
@@ -27,10 +26,71 @@ export function initAudio() {
   if (ctx?.state === "suspended") void ctx.resume();
 }
 
-/** Toggle sound on/off. Returns the new state. */
+/** Lazily create the single music element (persists across scene changes). */
+function getMusic(): HTMLAudioElement | null {
+  if (!musicAvailable || typeof window === "undefined") return null;
+  if (!music) {
+    music = new Audio(MUSIC_URL);
+    music.loop = true;
+    music.preload = "auto";
+    music.volume = 0;
+    music.addEventListener("error", () => {
+      musicAvailable = false;
+      music = null;
+    });
+  }
+  if (!visibilityWired) {
+    visibilityWired = true;
+    // Politeness: duck out when the tab is hidden, come back if sound is on.
+    document.addEventListener("visibilitychange", () => {
+      if (!music) return;
+      if (document.hidden) music.pause();
+      else if (enabled) void music.play().catch(() => {});
+    });
+  }
+  return music;
+}
+
+function fadeMusicTo(target: number, ms = 1200) {
+  const m = getMusic();
+  if (!m) return;
+  if (fadeTimer !== null) window.clearInterval(fadeTimer);
+  const steps = 24;
+  const start = m.volume;
+  let i = 0;
+  fadeTimer = window.setInterval(() => {
+    i += 1;
+    m.volume = Math.min(1, Math.max(0, start + (target - start) * (i / steps)));
+    if (i >= steps) {
+      if (fadeTimer !== null) window.clearInterval(fadeTimer);
+      fadeTimer = null;
+      if (target === 0) m.pause();
+    }
+  }, ms / steps);
+}
+
+function startMusic() {
+  const m = getMusic();
+  if (!m) return;
+  void m
+    .play()
+    .then(() => fadeMusicTo(MUSIC_VOLUME))
+    .catch(() => {
+    });
+}
+
+function pauseMusic() {
+  fadeMusicTo(0, 400);
+}
+
 export function toggleSound(): boolean {
   enabled = !enabled;
-  if (enabled) initAudio();
+  if (enabled) {
+    initAudio();
+    startMusic();
+  } else {
+    pauseMusic();
+  }
   return enabled;
 }
 

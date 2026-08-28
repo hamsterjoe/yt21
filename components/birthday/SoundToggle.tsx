@@ -1,14 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { toggleSound } from "@/lib/sound";
+import { soundEnabled, toggleSound } from "@/lib/sound";
 
 /**
- * Sound toggle — appears after the gift is opened. Off by default;
- * sound is never required to understand anything.
+ * Sound toggle — appears after the first tap. The soundtrack starts
+ * automatically on that tap, so this simply mutes/unmutes everything
+ * (music + effects) from then on.
  */
 export default function SoundToggle() {
-  const [on, setOn] = useState(false);
+  const [on, setOn] = useState(() => soundEnabled());
 
   return (
     <button

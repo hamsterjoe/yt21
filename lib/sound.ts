@@ -1,7 +1,19 @@
 "use client";
 
+/**
+ * Sound design — synthesised SFX + looping background music.
+ *
+ * 🎵 MUSIC: drop your file at  public/birthday-song.mp3  — it's served at
+ * /birthday-song.mp3. The soundtrack (music + effects) starts automatically
+ * on the very first tap: browsers block audible audio before any user
+ * interaction, so kicking off on the gift tap is the closest thing to true
+ * autoplay. The floating 🔊/🔇 toggle then mutes/unmutes everything.
+ *
+ * If the mp3 is missing or fails, the effects still work normally.
+ */
+
 let ctx: AudioContext | null = null;
-let enabled = true;
+let enabled = false;
 
 let music: HTMLAudioElement | null = null;
 let musicAvailable = true;
@@ -9,8 +21,9 @@ let fadeTimer: number | null = null;
 let visibilityWired = false;
 
 const MUSIC_URL = "/birthday-song.mp3";
-const MUSIC_VOLUME = 0.42;
+const MUSIC_VOLUME = 0.42; // ✏️ background level — raise/lower to taste
 
+/** Create/resume the AudioContext. Call from a user gesture. */
 export function initAudio() {
   if (typeof window === "undefined") return;
   if (!ctx) {
@@ -76,13 +89,26 @@ function startMusic() {
     .play()
     .then(() => fadeMusicTo(MUSIC_VOLUME))
     .catch(() => {
+      /* browser blocked it — will succeed on the next tap */
     });
 }
 
 function pauseMusic() {
-  fadeMusicTo(0, 400);
+  fadeMusicTo(0, 400); // pauses when the fade-out completes
 }
 
+/**
+ * Start the soundtrack — music + SFX — on the very first user gesture.
+ * Wired to the gift tap (and a first-tap-anywhere fallback) in
+ * BirthdayExperience. After this, the sound toggle simply mutes/unmutes.
+ */
+export function beginSoundtrack() {
+  enabled = true;
+  initAudio();
+  startMusic();
+}
+
+/** Toggle sound on/off — controls SFX and background music together. */
 export function toggleSound(): boolean {
   enabled = !enabled;
   if (enabled) {

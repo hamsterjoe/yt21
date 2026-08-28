@@ -7,22 +7,26 @@ import CandleGame from "./CandleGame";
 import MemoriesScene from "./MemoriesScene";
 import LetterScene from "./LetterScene";
 import FinalScene from "./FinalScene";
-// import ScrapbookNav from "./ScrapbookNav";
 import Cursor from "./Cursor";
 import SoundToggle from "./SoundToggle";
-import { initAudio } from "@/lib/sound";
+import { beginSoundtrack } from "@/lib/sound";
 import { tapSparks } from "@/lib/fx";
 
 /**
  * BirthdayExperience — the scene state machine.
  *
- *   opening → balloons → cake → main (memories + letter + finale)
+ *   opening → balloons → cake → main (gallery + letter + finale)
  *
  * The candle game is the gatekeeper: `main` only renders once all
  * 21 candles are blown out. Unlock state persists in sessionStorage,
- * so revisiting within the same session skips straight to the scrapbook.
+ * so revisiting within the same session skips straight to the gallery.
  * The 🎂 Replay nav button re-opens the cake as an overlay without
  * re-locking anything.
+ *
+ * Sound: the soundtrack (music + effects) starts on the very first tap —
+ * the earliest browsers allow audible audio. Normally that's the gift;
+ * the once-listener below catches every other path (e.g. returning to an
+ * already-unlocked session, where the gift is skipped).
  */
 
 type Phase = "opening" | "balloons" | "cake" | "main";
@@ -35,17 +39,29 @@ export default function BirthdayExperience() {
   const [toast, setToast] = useState<string | null>(null);
   const [started, setStarted] = useState(false);
 
-  // Returning within the same session? Skip straight to the scrapbook.
+  // Returning within the same session? Skip straight to the gallery.
   useEffect(() => {
     try {
       if (sessionStorage.getItem(STORAGE_KEY) === "1") {
         setPhase("main");
-        setToast("Happy Birthday ✨");
+        setToast("welcome back — already unlocked ✨");
       }
     } catch {
       /* private browsing — play through normally */
     }
   }, []);
+
+  // Start the soundtrack on the first tap anywhere (covers visits where
+  // the opening scene is skipped; the gift tap is covered via the prop).
+  useEffect(() => {
+    if (started) return;
+    const onFirstTap = () => {
+      beginSoundtrack();
+      setStarted(true);
+    };
+    window.addEventListener("pointerdown", onFirstTap, { once: true, passive: true });
+    return () => window.removeEventListener("pointerdown", onFirstTap);
+  }, [started]);
 
   // Lock page scroll while a full-screen scene (or replay overlay) is up.
   useEffect(() => {
@@ -78,7 +94,7 @@ export default function BirthdayExperience() {
   }, [started]);
 
   const handleFirstGesture = useCallback(() => {
-    initAudio(); // creating/resuming the AudioContext needs a user gesture
+    beginSoundtrack(); // music + SFX start on the gift tap (earliest browsers allow)
     setStarted(true);
   }, []);
 
@@ -89,7 +105,7 @@ export default function BirthdayExperience() {
       /* ignore */
     }
     setPhase("main");
-    setToast("🔓 Surprise unlocked");
+    setToast("🔓 surprise unlocked — welcome to your scrapbook");
   }, []);
 
   return (
@@ -112,7 +128,7 @@ export default function BirthdayExperience() {
             <LetterScene />
             <FinalScene />
           </main>
-          {/* <ScrapbookNav onReplay={() => setReplay(true)} /> */}
+          <ScrapbookNav onReplay={() => setReplay(true)} />
         </>
       )}
 

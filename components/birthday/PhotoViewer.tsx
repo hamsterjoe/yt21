@@ -66,7 +66,7 @@ export default function PhotoViewer({ memory, onClose }: { memory: Memory; onClo
             )}
           </span>
           {memory.caption && <figcaption className="cap">{memory.caption}</figcaption>}
-          <p className="viewer-note">{memory.note ?? "one of my favourites ♡"}</p>
+          <p className="viewer-note">{memory.note ?? ""}</p>
         </div>
       </figure>
     </div>
